@@ -1,0 +1,7 @@
+{
+  "name": "lootnest-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r dev"
+  }
+} 
