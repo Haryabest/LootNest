@@ -1,0 +1,5 @@
+import './globals.css';
+import './components.css';
+import './layout.css';
+
+export {}; 

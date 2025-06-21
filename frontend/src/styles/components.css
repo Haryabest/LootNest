@@ -1,0 +1,138 @@
+/* Search component styles */
+.no-outline-search .ant-input:focus,
+.no-outline-search .ant-input-focused,
+.no-outline-search .ant-input-affix-wrapper:focus,
+.no-outline-search .ant-input-affix-wrapper-focused {
+  box-shadow: none !important;
+  border-color: #d9d9d9 !important;
+  outline: none !important;
+}
+
+.no-outline-search .ant-input-search-button {
+  border-left: 1px solid #d9d9d9 !important;
+}
+
+.no-outline-search .ant-input-affix-wrapper {
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+}
+
+.no-outline-search .ant-input-search-button {
+  height: 100% !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.no-outline-search .ant-input {
+  font-size: 16px !important;
+}
+
+/* Enhanced search input styles */
+.header-search-input {
+  width: 400px !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.header-search-input .ant-input-affix-wrapper {
+  border-radius: 8px 0 0 8px !important;
+  border: 1px solid #d9d9d9 !important;
+  box-shadow: none !important;
+  padding: 4px 12px !important;
+  height: 42px !important;
+}
+
+.header-search-input .ant-input {
+  font-size: 15px !important;
+  font-family: 'Segoe UI', sans-serif !important;
+}
+
+.header-search-input .ant-input-search-button {
+  height: 42px !important;
+  border-radius: 0 8px 8px 0 !important;
+  width: 42px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-search-input .ant-btn.ant-btn-primary {
+  height: 100% !important;
+  width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-search-input .ant-input:focus,
+.header-search-input .ant-input-focused,
+.header-search-input .ant-input-affix-wrapper:focus,
+.header-search-input .ant-input-affix-wrapper-focused {
+  box-shadow: none !important;
+  border-color: #d9d9d9 !important;
+}
+
+.header-search-input .ant-input-affix-wrapper:hover,
+.header-search-input .ant-input:hover {
+  border-color: #1677ff !important;
+}
+
+/* Header component styles */
+.app-header {
+  background: #fff;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px #f0f1f2;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.app-header-title {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  color: #1677ff;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.app-header-search-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.app-header-buttons {
+  flex: 1;
+  justify-content: flex-end;
+  display: flex;
+}
+
+/* Footer component styles */
+.app-footer {
+  background: #001529;
+  padding: 40px 50px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.app-footer-title {
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 20px;
+}
+
+.app-footer-text {
+  color: #ffffffb3;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.app-footer-link {
+  color: #ffffffb3;
+}
+
+.app-footer-divider {
+  border-color: #ffffff33;
+  margin: 24px 0;
+} 
