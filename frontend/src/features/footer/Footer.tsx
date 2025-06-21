@@ -1,71 +1,50 @@
 'use client'
 
 import React from 'react';
-import { Layout, Row, Col, Typography, Space, Button, Divider } from 'antd';
+import { Layout, Row, Col, Typography, Divider } from 'antd';
+import NextLink from 'next/link';
+import ApiModeToggle from '@/components/auth/ApiModeToggle';
 
 const { Footer } = Layout;
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
-export const AppFooter: React.FC = () => {
+export default function AppFooter() {
   return (
     <Footer className="app-footer">
       <Row gutter={[24, 24]}>
-        <Col xs={24} sm={24} md={8} lg={8}>
-          <Title level={3} className="app-footer-title">
-            LootNest
-          </Title>
+        <Col xs={24} sm={8}>
+          <Title level={5} className="app-footer-title">LootNest</Title>
           <Text className="app-footer-text">
-            Ваш надежный маркетплейс для покупки и продажи игровых предметов
+            Маркетплейс игрового контента и цифровых товаров
           </Text>
-          <Space>
-            <Button type="primary" ghost>О нас</Button>
-            <Button type="primary" ghost>Контакты</Button>
-          </Space>
+          <ApiModeToggle />
         </Col>
-        
-        <Col xs={24} sm={12} md={8} lg={8}>
-          <Title level={4} className="app-footer-title">
-            Категории
-          </Title>
-          <Space direction="vertical" style={{ width: '100%' }}>
-            <Link className="app-footer-link">Игровые аккаунты</Link>
-            <Link className="app-footer-link">Внутриигровые предметы</Link>
-            <Link className="app-footer-link">Валюта</Link>
-            <Link className="app-footer-link">Скины</Link>
-            <Link className="app-footer-link">Услуги</Link>
-          </Space>
+        <Col xs={24} sm={8}>
+          <Title level={5} className="app-footer-title">Информация</Title>
+          <NextLink href="/about" className="app-footer-link">
+            <Text className="app-footer-text">О нас</Text>
+          </NextLink>
+          <NextLink href="/terms" className="app-footer-link">
+            <Text className="app-footer-text">Условия использования</Text>
+          </NextLink>
+          <NextLink href="/privacy" className="app-footer-link">
+            <Text className="app-footer-text">Политика конфиденциальности</Text>
+          </NextLink>
         </Col>
-        
-        <Col xs={24} sm={12} md={8} lg={8}>
-          <Title level={4} className="app-footer-title">
-            Поддержка
-          </Title>
-          <Space direction="vertical" style={{ width: '100%' }}>
-            <Link className="app-footer-link">Центр поддержки</Link>
-            <Link className="app-footer-link">Безопасные сделки</Link>
-            <Link className="app-footer-link">Правила сервиса</Link>
-            <Link className="app-footer-link">FAQ</Link>
-          </Space>
+        <Col xs={24} sm={8}>
+          <Title level={5} className="app-footer-title">Поддержка</Title>
+          <NextLink href="/faq" className="app-footer-link">
+            <Text className="app-footer-text">FAQ</Text>
+          </NextLink>
+          <NextLink href="/contact" className="app-footer-link">
+            <Text className="app-footer-text">Связаться с нами</Text>
+          </NextLink>
         </Col>
       </Row>
-      
       <Divider className="app-footer-divider" />
-      
-      <Row justify="space-between" align="middle">
-        <Col>
-          <Text className="app-footer-text">
-            © 2023 LootNest. Все права защищены.
-          </Text>
-        </Col>
-        <Col>
-          <Space>
-            <Link className="app-footer-link">Условия использования</Link>
-            <Link className="app-footer-link">Политика конфиденциальности</Link>
-          </Space>
-        </Col>
-      </Row>
+      <Text className="app-footer-text" style={{ textAlign: 'center' }}>
+        © {new Date().getFullYear()} LootNest. Все права защищены.
+      </Text>
     </Footer>
   );
-};
-
-export default AppFooter; 
+} 

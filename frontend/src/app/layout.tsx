@@ -1,10 +1,10 @@
 'use client'
 
 import '../styles'; // Import all styles
-import { AppHeader } from '../features/header/Header';
-import { AppFooter } from '../features/footer/Footer';
-import { ConfigProvider, Layout } from 'antd';
-import { theme } from 'antd';
+import Header from '../features/header/Header';
+import AppFooter from '../features/footer/Footer';
+import { ConfigProvider, Layout, App } from 'antd';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const { Content } = Layout;
 
@@ -23,13 +23,17 @@ export default function RootLayout({
             },
           }}
         >
-          <Layout className="app-layout">
-            <AppHeader />
-            <Content className="app-content">
-              {children}
-            </Content>
-            <AppFooter />
-          </Layout>
+          <App>
+            <AuthProvider>
+              <Layout className="app-layout">
+                <Header />
+                <Content className="app-content">
+                  {children}
+                </Content>
+                <AppFooter />
+              </Layout>
+            </AuthProvider>
+          </App>
         </ConfigProvider>
       </body>
     </html>
