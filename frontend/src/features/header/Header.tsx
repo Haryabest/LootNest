@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import type { MenuProps } from 'antd';
+import Image from 'next/image';
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -54,15 +55,22 @@ export default function AppHeader() {
     <Header className="app-header">
       <div className="header-container">
         <div className="app-header-left">
-          <Title level={2} className="app-header-title">
-            <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
-              LootNest
+          <Title level={2} className="app-header-title logo-center">
+            <Link href="/" style={{ color: 'inherit', textDecoration: 'none', display: 'flex', alignItems: 'center', height: '100%' }}>
+              <Image 
+                src="/logo2.png" 
+                alt="LootNest Logo" 
+                width={100} 
+                height={100} 
+                priority={true}
+                style={{ objectFit: 'contain' }}
+              />
             </Link>
           </Title>
           <Link href="/catalog" passHref>
-            <Button 
-              type="primary" 
-              icon={<MenuOutlined />} 
+            <Button
+              type="primary"
+              icon={<MenuOutlined />}
               className="header-catalog-button"
             >
               Каталог
@@ -71,7 +79,7 @@ export default function AppHeader() {
         </div>
         <div className="app-header-search-container">
           <Input
-            placeholder="Поиск" 
+            placeholder="Поиск"
             className="header-search-input"
             size="large"
             prefix={<SearchOutlined className="search-icon" />}
@@ -80,28 +88,28 @@ export default function AppHeader() {
         <Space className="app-header-buttons">
           {user ? (
             <>
-              <Link href="/sell">
-                <Button 
-                  type="primary" 
-                  icon={<PlusOutlined />} 
-                  className="header-sell-button"
-                >
-                  Продать
-                </Button>
-              </Link>
               <Link href="/sales-history">
-                <Button 
-                  type="default" 
+                <Button
+                  type="default"
                   icon={<HistoryOutlined />}
                   className="header-history-button"
                 >
                   История
                 </Button>
               </Link>
+              <Link href="/sell">
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  className="header-sell-button"
+                >
+                  Продать
+                </Button>
+              </Link>
               <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
                 <div className="user-profile-dropdown">
-                  <Avatar 
-                    src={profile?.avatar_url} 
+                  <Avatar
+                    src={profile?.avatar_url}
                     icon={!profile?.avatar_url && <UserOutlined />}
                   />
                   <span className="user-name">{profile?.username || user.email}</span>
