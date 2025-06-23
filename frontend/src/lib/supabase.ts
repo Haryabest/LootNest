@@ -4,11 +4,67 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-// Создаем клиент Supabase
+// Создаем клиент Supabase с оптимизированными настройками и JWT
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: true, // Сохраняем сессию в localStorage
+    persistSession: true, // Меняем обратно на true для надежности сессии
     autoRefreshToken: true, // Автоматически обновляем токен
+    detectSessionInUrl: true, // Обнаруживает токен в URL
+    flowType: 'pkce', // Более безопасный тип авторизации
+    storage: {
+      // Используем кастомное хранилище для JWT токенов
+      getItem: (key: string): string | null => {
+        // Проверяем доступность window
+        if (typeof window === 'undefined') return null;
+        
+        // Получаем токен из memory storage или cookie
+        const token = sessionStorage.getItem(key) || 
+                      document.cookie.split('; ').find(row => row.startsWith(key))?.split('=')[1];
+        
+        // Явно преобразуем undefined в null для соответствия типу
+        return token || null;
+      },
+      setItem: (key: string, value: string) => {
+        // Проверяем доступность window
+        if (typeof window === 'undefined') return;
+        
+        try {
+          // Сохраняем токен в memory storage и cookie с более длительным сроком жизни
+          sessionStorage.setItem(key, value);
+          
+          // Увеличиваем время жизни cookie до 7 дней
+          const maxAge = 7 * 24 * 60 * 60; // 7 дней в секундах
+          document.cookie = `${key}=${value}; path=/; max-age=${maxAge}; SameSite=Strict; secure`;
+          
+          // Также дублируем в localStorage для лучшей персистентности
+          localStorage.setItem(`${key}_backup`, value);
+        } catch (e) {
+          console.error('Error saving auth token:', e);
+        }
+      },
+      removeItem: (key: string) => {
+        // Проверяем доступность window
+        if (typeof window === 'undefined') return;
+        
+        try {
+          // Удаляем токен из всех хранилищ
+          sessionStorage.removeItem(key);
+          localStorage.removeItem(`${key}_backup`);
+          document.cookie = `${key}=; path=/; max-age=0; SameSite=Strict`;
+        } catch (e) {
+          console.error('Error removing auth token:', e);
+        }
+      }
+    }
+  },
+  global: {
+    fetch: (url, options) => {
+      // Устанавливаем максимальное время ожидания
+      return fetch(url, {
+        ...options,
+        signal: AbortSignal.timeout(10000) // Таймаут 10 секунд
+      });
+    }
   }
 });
 
@@ -230,4 +286,105 @@ export async function updateUserProfile(userId: string, data: any) {
 // Функция для выхода из аккаунта
 export async function signOut() {
   return await supabase.auth.signOut();
+}
+
+// Функция для проверки и восстановления сессии
+export async function checkAndRestoreSession() {
+  if (typeof window === 'undefined') return null;
+  
+  try {
+    // Сначала проверяем сессию стандартным способом
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (session) return session;
+    
+    if (error) {
+      console.warn('Error getting session:', error);
+      
+      // Пробуем восстановить из localStorage, если основная сессия не найдена
+      const sessionKey = 'supabase.auth.token';
+      const backupToken = localStorage.getItem(`${sessionKey}_backup`);
+      
+      if (backupToken) {
+        try {
+          // Установим backup токен в основное хранилище и попробуем заново
+          sessionStorage.setItem(sessionKey, backupToken);
+          document.cookie = `${sessionKey}=${backupToken}; path=/; max-age=3600; SameSite=Strict`;
+          
+          // Повторно проверяем сессию
+          const { data: { session: restoredSession } } = await supabase.auth.getSession();
+          if (restoredSession) {
+            console.log('Session restored from backup');
+            return restoredSession;
+          }
+        } catch (backupError) {
+          console.error('Failed to restore session from backup:', backupError);
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Error in checkAndRestoreSession:', e);
+  }
+  
+  return null;
+}
+
+// Функция для отладки процесса аутентификации
+export function debugAuth() {
+  if (typeof window === 'undefined') return null;
+  
+  try {
+    const debugInfo = {
+      storageAvailable: {
+        localStorage: storage.localStorageAvailable(),
+        sessionStorage: storage.sessionStorageAvailable(),
+        cookies: storage.cookiesAvailable()
+      },
+      tokens: {
+        hasSessionToken: !!sessionStorage.getItem('supabase.auth.token'),
+        hasBackupToken: !!localStorage.getItem('supabase.auth.token_backup'),
+        hasCookieToken: document.cookie.includes('supabase.auth.token')
+      }
+    };
+    
+    console.log('Auth Debug Info:', debugInfo);
+    return debugInfo;
+  } catch (e) {
+    console.error('Error during auth debugging:', e);
+    return { error: String(e) };
+  }
+}
+
+// Вспомогательные функции для проверки доступности storage
+const storage = {
+  localStorageAvailable: () => {
+    try {
+      const testKey = '__test__';
+      localStorage.setItem(testKey, testKey);
+      localStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  },
+  
+  sessionStorageAvailable: () => {
+    try {
+      const testKey = '__test__';
+      sessionStorage.setItem(testKey, testKey);
+      sessionStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  },
+  
+  cookiesAvailable: () => {
+    try {
+      document.cookie = "__test__=test; max-age=10";
+      return document.cookie.includes('__test__');
+    } catch (e) {
+      return false;
+    }
+  }
 } 

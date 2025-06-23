@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, Typography, Divider, App } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Formik, Form, Field, ErrorMessage, FieldInputProps } from 'formik';
 import * as Yup from 'yup';
 import { Input, Button } from 'antd';
 import SocialLoginButtons from '@/components/auth/SocialLoginButtons';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { supabase, debugAuth } from '@/lib/supabase';
 
 const { Title, Text } = Typography;
 
@@ -32,8 +32,27 @@ interface LoginFormValues {
 export default function AuthPage() {
   const { message: messageApi } = App.useApp();
   const [loading, setLoading] = useState(false);
+  const [showDebugInfo, setShowDebugInfo] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, error: authError } = useAuth();
+  const searchParams = useSearchParams();
+  const errorParam = searchParams.get('error');
+
+  // Проверяем наличие ошибки в параметрах URL
+  useEffect(() => {
+    if (errorParam) {
+      const errorMessage = errorParam.replace(/_/g, ' ');
+      messageApi.error(`Ошибка авторизации: ${errorMessage}`);
+    }
+  }, [errorParam, messageApi]);
+
+  // Если есть ошибка аутентификации из контекста, показываем её
+  useEffect(() => {
+    if (authError) {
+      messageApi.error(`Проблема с сессией: ${authError.message}`);
+    }
+  }, [authError, messageApi]);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -41,20 +60,39 @@ export default function AuthPage() {
       router.push('/');
     }
   }, [user, router]);
+  
+  // Отладочная информация для авторизации
+  const handleDebugClick = () => {
+    const info = debugAuth();
+    setDebugInfo(info);
+    setShowDebugInfo(!showDebugInfo);
+  };
 
   const handleSubmit = async (values: LoginFormValues) => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // Очищаем любые стары токены перед новым входом
+      await supabase.auth.signOut();
+      
+      // Пробуем войти с новыми данными
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
       if (error) throw error;
       
+      if (!data || !data.session) {
+        throw new Error('Сессия не создана после успешной авторизации');
+      }
+      
       messageApi.success('Успешный вход!');
-      router.push('/'); // Redirect to home page after successful login
+      
+      // Делаем небольшую паузу перед редиректом, чтобы токены успели сохраниться
+      setTimeout(() => {
+        router.push('/');
+      }, 500);
     } catch (error: any) {
       console.error('Login error:', error);
       messageApi.error(error.message || 'Ошибка входа. Пожалуйста, проверьте ваши данные.');
@@ -134,6 +172,17 @@ export default function AuthPage() {
           <Link href="/auth/reset-password" className="auth-forgot-password">
             Забыли пароль?
           </Link>
+          
+          <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <Button type="link" size="small" onClick={handleDebugClick}>
+              {showDebugInfo ? 'Скрыть отладку' : 'Показать отладку'}
+            </Button>
+            {showDebugInfo && debugInfo && (
+              <div style={{ textAlign: 'left', fontSize: '12px', marginTop: '10px', padding: '10px', border: '1px solid #eee', borderRadius: '5px', background: '#f9f9f9', overflowX: 'auto' }}>
+                <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
+              </div>
+            )}
+          </div>
         </div>
       </Card>
     </div>

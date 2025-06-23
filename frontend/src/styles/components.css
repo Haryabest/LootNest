@@ -872,7 +872,7 @@
 
 .sales-tab, .purchases-tab {
   padding: 8px 0;
-}
+} 
 
 .logo-center {
   display: flex !important;
@@ -947,4 +947,74 @@
 
 .profile-tabs {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Добавляем стили для баланса пользователя */
+.user-balance-dropdown {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-balance-dropdown:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.balance-amount {
+  font-weight: 500;
+  margin-left: 2px;
+  white-space: nowrap;
+}
+
+/* Стили для страниц пополнения и вывода средств */
+.deposit-page,
+.withdraw-page {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.deposit-card,
+.withdraw-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.deposit-form,
+.withdraw-form {
+  margin-top: 10px;
+}
+
+.steps-content {
+  min-height: 300px;
+  padding: 20px 0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.deposit-summary,
+.withdraw-summary {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.deposit-success,
+.withdraw-success {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.preset-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8px;
 } 

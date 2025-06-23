@@ -59,6 +59,38 @@ export default function RegisterPage() {
     setLoading(true);
     
     try {
+      // Проверим, существует ли пользователь с таким email
+      const { data: existingUsers, error: searchError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', values.email);
+        
+      if (searchError) {
+        console.warn('Error checking existing email:', searchError);
+      }
+      
+      if (existingUsers && existingUsers.length > 0) {
+        messageApi.error('Пользователь с таким email уже существует.');
+        setLoading(false);
+        return;
+      }
+      
+      // Проверим, существует ли пользователь с таким username
+      const { data: existingUsernames, error: usernameError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('username', values.username);
+        
+      if (usernameError) {
+        console.warn('Error checking existing username:', usernameError);
+      }
+      
+      if (existingUsernames && existingUsernames.length > 0) {
+        messageApi.error('Это имя пользователя уже занято.');
+        setLoading(false);
+        return;
+      }
+
       // Регистрация с подтверждением email
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
@@ -66,6 +98,7 @@ export default function RegisterPage() {
         options: {
           data: {
             username: values.username,
+            full_name: '',
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
@@ -73,27 +106,45 @@ export default function RegisterPage() {
 
       if (error) throw error;
 
-      // Создаем профиль пользователя вручную
+      // Создаем профиль пользователя сразу после регистрации
       if (data.user) {
         try {
-          const { error: profileError } = await supabase
+          // Проверяем, не создан ли уже профиль
+          const { data: existingProfile } = await supabase
             .from('profiles')
-            .insert([
-              {
-                id: data.user.id,
-                username: values.username,
-                email: values.email,
-                created_at: new Date().toISOString(),
-              },
-            ]);
+            .select('id')
+            .eq('id', data.user.id)
+            .single();
 
-          if (profileError) console.error('Error creating profile:', profileError);
+          if (!existingProfile) {
+            // Создаем новый профиль
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .insert([
+                {
+                  id: data.user.id,
+                  username: values.username,
+                  email: values.email,
+                  created_at: new Date().toISOString(),
+                },
+              ]);
+
+            if (profileError) {
+              console.error('Error creating profile:', profileError);
+              messageApi.warning('Аккаунт создан, но возникла проблема с профилем. Пожалуйста, заполните профиль позже.');
+            }
+          }
         } catch (profileErr) {
           console.error('Error in profile creation:', profileErr);
+          messageApi.warning('Аккаунт создан, но возникла проблема с профилем. Пожалуйста, заполните профиль позже.');
         }
 
         messageApi.success('Регистрация успешна! Пожалуйста, проверьте вашу почту для подтверждения аккаунта.');
-        router.push('/auth');
+        
+        // Делаем небольшую паузу перед редиректом
+        setTimeout(() => {
+          router.push('/auth');
+        }, 1500);
       }
     } catch (error: any) {
       console.error('Registration error:', error);

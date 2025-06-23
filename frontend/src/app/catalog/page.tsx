@@ -29,6 +29,7 @@ import {
   MenuOutlined
 } from '@ant-design/icons';
 import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -41,7 +42,7 @@ const products = [
     id: 1,
     title: 'Пополнение STEAM 24/7 РФ, СНГ',
     price: 1.09,
-    image: 'https://placehold.co/300x200/1677ff/white?text=STEAM',
+    image: '/placeholders/steam.png',
     platform: 'Steam',
     rating: 4.9,
     sales: 323492,
@@ -51,7 +52,7 @@ const products = [
     id: 2,
     title: 'PlayStation Network (PSN) - $10 (USA)',
     price: 12.50,
-    image: 'https://placehold.co/300x200/0070d1/white?text=PSN',
+    image: '/placeholders/psn.png',
     platform: 'PlayStation',
     rating: 4.8,
     sales: 157834,
@@ -61,7 +62,7 @@ const products = [
     id: 3,
     title: 'Xbox Game Pass Ultimate - 1 месяц',
     price: 9.99,
-    image: 'https://placehold.co/300x200/107c10/white?text=Xbox',
+    image: '/placeholders/xbox.png',
     platform: 'Xbox',
     rating: 4.7,
     sales: 98521,
@@ -71,7 +72,7 @@ const products = [
     id: 4,
     title: 'Nintendo Switch Online - 12 месяцев',
     price: 19.99,
-    image: 'https://placehold.co/300x200/e60012/white?text=Nintendo',
+    image: '/placeholders/nintendo.png',
     platform: 'Nintendo Switch',
     rating: 4.6,
     sales: 76543,
@@ -81,7 +82,7 @@ const products = [
     id: 5,
     title: 'Epic Games Store - $25 Gift Card',
     price: 25.00,
-    image: 'https://placehold.co/300x200/2a2a2a/white?text=Epic',
+    image: '/placeholders/epic.png',
     platform: 'Epic Games',
     rating: 4.5,
     sales: 54321,
@@ -91,7 +92,7 @@ const products = [
     id: 6,
     title: 'Grand Theft Auto V: Premium Edition',
     price: 29.99,
-    image: 'https://placehold.co/300x200/000000/white?text=GTA+V',
+    image: '/placeholders/gta.png',
     platform: 'Steam',
     rating: 4.8,
     sales: 987654,
@@ -101,7 +102,7 @@ const products = [
     id: 7,
     title: 'Microsoft Office 365 - 1 год',
     price: 69.99,
-    image: 'https://placehold.co/300x200/d83b01/white?text=Office',
+    image: '/placeholders/office.png',
     platform: 'Microsoft Office',
     rating: 4.7,
     sales: 123456,
@@ -111,7 +112,7 @@ const products = [
     id: 8,
     title: 'Discord Nitro - 1 месяц',
     price: 9.99,
-    image: 'https://placehold.co/300x200/5865f2/white?text=Discord',
+    image: '/placeholders/discord.png',
     platform: 'Discord',
     rating: 4.6,
     sales: 234567,

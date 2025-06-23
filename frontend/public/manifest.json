@@ -1,0 +1,53 @@
+{
+  "name": "LootNest",
+  "short_name": "LootNest",
+  "description": "Платформа для продажи и покупки игровых предметов",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "id": "/",
+  "scope": "/",
+  "categories": ["shopping", "games", "marketplace"],
+  "lang": "ru-RU",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/placeholders/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Каталог товаров",
+      "short_name": "Каталог",
+      "description": "Просмотреть все доступные товары",
+      "url": "/catalog",
+      "icons": [{ "src": "/placeholders/catalog.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Профиль",
+      "short_name": "Профиль",
+      "description": "Просмотреть свой профиль",
+      "url": "/profile",
+      "icons": [{ "src": "/placeholders/profile.png", "sizes": "96x96" }]
+    }
+  ]
+} 

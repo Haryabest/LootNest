@@ -132,8 +132,8 @@ export default function ProfilePage() {
   const handleProfileUpdate = async (values: any) => {
     try {
       await updateProfile({
-        username: values.username,
-        full_name: values.fullName,
+          username: values.username,
+          full_name: values.fullName,
       });
       
       messageApi.success('Профиль успешно обновлен');
@@ -236,7 +236,7 @@ export default function ProfilePage() {
       const { data: publicUrl } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
-      
+
       if (!publicUrl || !publicUrl.publicUrl) {
         throw new Error('Не удалось получить публичный URL для загруженного файла');
       }
@@ -334,7 +334,7 @@ export default function ProfilePage() {
                   precision={1} 
                   prefix={<StarOutlined />} 
                   suffix="/5" 
-                />
+            />
               </div>
             </Col>
           </Row>
@@ -403,113 +403,113 @@ export default function ProfilePage() {
     {
       key: 'profile',
       label: (
-        <span>
-          <UserOutlined />
-          Профиль
-        </span>
+              <span>
+                <UserOutlined />
+                Профиль
+              </span>
       ),
       children: (
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{
-            username: profile?.username || '',
-            fullName: profile?.full_name || '',
-            email: user?.email || '',
-          }}
-          onFinish={handleProfileUpdate}
-        >
-          <Form.Item
-            name="username"
-            label="Имя пользователя"
-            rules={[
-              { required: true, message: 'Пожалуйста, введите имя пользователя' },
-              { min: 3, message: 'Имя пользователя должно содержать минимум 3 символа' }
-            ]}
-          >
-            <Input prefix={<UserOutlined />} placeholder="Имя пользователя" />
-          </Form.Item>
+            <Form
+              form={form}
+              layout="vertical"
+              initialValues={{
+                username: profile?.username || '',
+                fullName: profile?.full_name || '',
+                email: user?.email || '',
+              }}
+              onFinish={handleProfileUpdate}
+            >
+              <Form.Item
+                name="username"
+                label="Имя пользователя"
+                rules={[
+                  { required: true, message: 'Пожалуйста, введите имя пользователя' },
+                  { min: 3, message: 'Имя пользователя должно содержать минимум 3 символа' }
+                ]}
+              >
+                <Input prefix={<UserOutlined />} placeholder="Имя пользователя" />
+              </Form.Item>
 
-          <Form.Item
-            name="fullName"
-            label="Полное имя"
-          >
-            <Input prefix={<UserOutlined />} placeholder="Полное имя" />
-          </Form.Item>
+              <Form.Item
+                name="fullName"
+                label="Полное имя"
+              >
+                <Input prefix={<UserOutlined />} placeholder="Полное имя" />
+              </Form.Item>
 
-          <Form.Item
-            name="email"
-            label="Email"
-          >
-            <Input 
-              prefix={<MailOutlined />} 
-              placeholder="Email" 
-              disabled 
-            />
-          </Form.Item>
+              <Form.Item
+                name="email"
+                label="Email"
+              >
+                <Input 
+                  prefix={<MailOutlined />} 
+                  placeholder="Email" 
+                  disabled 
+                />
+              </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Сохранить изменения
-            </Button>
-          </Form.Item>
-        </Form>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" block>
+                  Сохранить изменения
+                </Button>
+              </Form.Item>
+            </Form>
       )
     },
     {
       key: 'security',
       label: (
-        <span>
-          <LockOutlined />
-          Безопасность
-        </span>
+              <span>
+                <LockOutlined />
+                Безопасность
+              </span>
       ),
       children: (
-        <Form
-          form={passwordForm}
-          layout="vertical"
-          onFinish={handlePasswordChange}
-        >
-          <Form.Item
-            name="newPassword"
-            label="Новый пароль"
-            rules={[
-              { required: true, message: 'Пожалуйста, введите новый пароль' },
-              { min: 8, message: 'Пароль должен содержать минимум 8 символов' },
-              {
-                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message: 'Пароль должен содержать заглавные и строчные буквы, цифры и специальные символы'
-              }
-            ]}
-          >
-            <Input.Password prefix={<LockOutlined />} placeholder="Новый пароль" />
-          </Form.Item>
-
-          <Form.Item
-            name="confirmPassword"
-            label="Подтвердите пароль"
-            dependencies={['newPassword']}
-            rules={[
-              { required: true, message: 'Пожалуйста, подтвердите пароль' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('newPassword') === value) {
-                    return Promise.resolve();
+            <Form
+              form={passwordForm}
+              layout="vertical"
+              onFinish={handlePasswordChange}
+            >
+              <Form.Item
+                name="newPassword"
+                label="Новый пароль"
+                rules={[
+                  { required: true, message: 'Пожалуйста, введите новый пароль' },
+                  { min: 8, message: 'Пароль должен содержать минимум 8 символов' },
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message: 'Пароль должен содержать заглавные и строчные буквы, цифры и специальные символы'
                   }
-                  return Promise.reject(new Error('Пароли не совпадают'));
-                },
-              }),
-            ]}
-          >
-            <Input.Password prefix={<LockOutlined />} placeholder="Подтвердите пароль" />
-          </Form.Item>
+                ]}
+              >
+                <Input.Password prefix={<LockOutlined />} placeholder="Новый пароль" />
+              </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Изменить пароль
-            </Button>
-          </Form.Item>
-        </Form>
+              <Form.Item
+                name="confirmPassword"
+                label="Подтвердите пароль"
+                dependencies={['newPassword']}
+                rules={[
+                  { required: true, message: 'Пожалуйста, подтвердите пароль' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('newPassword') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Пароли не совпадают'));
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password prefix={<LockOutlined />} placeholder="Подтвердите пароль" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" block>
+                  Изменить пароль
+                </Button>
+              </Form.Item>
+            </Form>
       )
     }
   ];

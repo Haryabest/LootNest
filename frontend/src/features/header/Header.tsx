@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react';
-import { Layout, Input, Button, Space, Typography, Avatar, Dropdown } from 'antd';
-import { SearchOutlined, MenuOutlined, UserOutlined, LogoutOutlined, SettingOutlined, ShoppingOutlined, HistoryOutlined, PlusOutlined } from '@ant-design/icons';
+import { Layout, Input, Button, Space, Typography, Avatar, Dropdown, Badge } from 'antd';
+import { SearchOutlined, MenuOutlined, UserOutlined, LogoutOutlined, SettingOutlined, ShoppingOutlined, HistoryOutlined, PlusOutlined, WalletOutlined, DownOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -48,6 +48,21 @@ export default function AppHeader() {
       label: 'Выйти',
       icon: <LogoutOutlined />,
       onClick: handleLogout,
+    },
+  ];
+
+  const balanceMenuItems: MenuProps['items'] = [
+    {
+      key: 'deposit',
+      label: 'Пополнение баланса',
+      icon: <PlusOutlined />,
+      onClick: () => router.push('/profile/deposit'),
+    },
+    {
+      key: 'withdraw',
+      label: 'Вывод средств',
+      icon: <DownOutlined />,
+      onClick: () => router.push('/profile/withdraw'),
     },
   ];
 
@@ -106,6 +121,17 @@ export default function AppHeader() {
                   Продать
                 </Button>
               </Link>
+              
+              {/* Баланс пользователя */}
+              <Dropdown menu={{ items: balanceMenuItems }} placement="bottomRight">
+                <div className="user-balance-dropdown">
+                  <Badge>
+                    <WalletOutlined style={{ fontSize: '16px', marginRight: '5px' }} />
+                    <span className="balance-amount">0,00 ₽</span>
+                  </Badge>
+                </div>
+              </Dropdown>
+
               <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
                 <div className="user-profile-dropdown">
                   <Avatar

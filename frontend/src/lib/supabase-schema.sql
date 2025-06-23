@@ -108,7 +108,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- Create a trigger to call the function when a new user signs up
 CREATE OR REPLACE TRIGGER on_auth_user_created_preferences
   AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user_preferences();
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user_preferences(); 
 
 -- Storage bucket policies for avatars
 -- Create the avatars bucket if it doesn't exist
